@@ -12,7 +12,8 @@ def main():
   source = sys.argv[1]
   service = auth.auth() # We get the authentication token and service instance for upload
 
-  os.mkdir(source)
+  if not os.path.exists(source):
+    os.mkdir(source)
   parentFolder = drive.search_folder_name(service, source)[0]["id"]
   download.loop_through_files_download(service, parentFolder, source)
 

@@ -9,7 +9,8 @@ def loop_through_files_download(service, parent_folder_id, folder):
     if isFolder:
       fName = os.path.join(folder, f["name"])
       print(f, fName)
-      os.mkdir(fName)
+      if not os.path.exists(fName):
+        os.mkdir(fName)
       loop_through_files_download(service, f["id"], fName)
     else:
       print(f)
