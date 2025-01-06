@@ -1,25 +1,21 @@
 import sys
+import os
 
-from controllers import auth, file, sample, copy
+from controllers import auth, file, sample, copy, download
 from services import drive
-
 
 def main():
   n = len(sys.argv)
-  if n != 3:
+  if n != 2:
     raise Exception("please use 2 arguments, source folder and destination")
 
   source = sys.argv[1]
-  destination = sys.argv[2]
-
   service = auth.auth() # We get the authentication token and service instance for upload
-  folders = file.get_folders() # We get the file & folder group first
 
+  os.mkdir(source)
   parentFolder = drive.search_folder_name(service, source)[0]["id"]
-  newParent = drive.create_folder(service, destination)
-  copy.loop_through_files_upload(service, parentFolder, newParent)
+  download.loop_through_files_download(service, parentFolder, source)
 
-  # sample.upload_file(service, folders)
 
 if __name__ == "__main__":
   main()

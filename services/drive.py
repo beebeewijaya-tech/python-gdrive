@@ -1,4 +1,5 @@
-from googleapiclient.http import MediaFileUpload
+from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
+import io
 
 def create_folder(service, folder_name, parent_folder_id=None):
     """Create a folder in Google Drive and return its ID."""
@@ -60,3 +61,17 @@ def copy_file(service, fileId, fileName, parent_folder_id):
   newFile = {"parents": [parent_folder_id], 'name': fileName}
   service.files().copy(fileId=fileId, body=newFile).execute()
   print(f"Copying {fileId}-{fileName} into new parent {parent_folder_id}")
+
+# To Download Files
+def downloadfiles(service, dowid, name,dfilespath):
+    request = service.files().get_media(fileId=dowid)
+    fh = io.BytesIO()
+    downloader = MediaIoBaseDownload(fh, request)
+    done = False
+    while done is False:
+        status, done = downloader.next_chunk()
+        print("Download %d%%." % int(status.progress() * 100))
+    with io.open(dfilespath + "/" + name, 'wb') as f:
+        fh.seek(0)
+        f.write(fh.read())
+
