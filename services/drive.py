@@ -67,7 +67,13 @@ def copy_file(service, fileId, fileName, parent_folder_id):
 def downloadfiles(service, dowid, name,dfilespath):
     p = dfilespath + "/" + name
     if not os.path.exists(p):
-      request = service.files().get_media(fileId=dowid)
+      extFile = name.split('.')
+
+      if len(extFile) <= 1:
+         request = service.files().export_media(fileId=dowid, mimeType='text/csv')
+      else:
+        request = service.files().get_media(fileId=dowid)
+
       fh = io.BytesIO()
       downloader = MediaIoBaseDownload(fh, request)
       done = False
