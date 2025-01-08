@@ -1,8 +1,7 @@
-from services import drive
 import os
 
-def loop_through_files_download(service, parent_folder_id, folder):
-  listFiles = drive.list_files_from_parent_folder(service, parent_folder_id)
+def loop_through_files_download(drive, parent_folder_id, folder):
+  listFiles = drive.list_files_from_parent_folder(parent_folder_id)
 
   for f in listFiles:
     isFolder = f["mimeType"] == "application/vnd.google-apps.folder"
@@ -11,7 +10,7 @@ def loop_through_files_download(service, parent_folder_id, folder):
       print(f, fName)
       if not os.path.exists(fName):
         os.mkdir(fName)
-      loop_through_files_download(service, f["id"], fName)
+      loop_through_files_download(drive, f["id"], fName)
     else:
       print(f)
-      drive.downloadfiles(service, f["id"], f["name"], folder)
+      drive.downloadfiles(f["id"], f["name"], folder)
